@@ -7,7 +7,7 @@ import joblib
 import os
 
 # Model dosyasının yolu
-model_path = os.path.join(os.getcwd(), "random_forest_model.pkl")
+model_path = os.path.join(os.getcwd(), "notebooks", "random_forest_model.pkl")
 
 # Modeli yükle
 try:
