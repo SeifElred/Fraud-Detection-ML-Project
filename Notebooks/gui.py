@@ -1,42 +1,48 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
-
-
 import streamlit as st
 import pandas as pd
 import joblib
+import os
+
+# Model dosyasının doğru yolu
+model_path = '/workspaces/Fraud-Detection-ML-Project/notebooks/random_forest_model.pkl'
 
 # Modeli yükle
-model = joblib.load("random_forest_model.pkl")
+try:
+    model = joblib.load(model_path)
+    st.success("Model başarıyla yüklendi!")
+except FileNotFoundError:
+    st.error("Model dosyası bulunamadı. Lütfen 'random_forest_model.pkl' dosyasının doğru konumda olduğundan emin olun.")
+    st.stop()
+except Exception as e:
+    st.error(f"Model yüklenirken bir hata oluştu: {e}")
+    st.stop()
 
 # Başlık
-st.write("Lütfen özellik değerlerini giriniz.")
+st.title("Dolandırıcılık Tespiti Uygulaması")
 
 # Kullanıcıdan giriş verilerini al
+st.subheader("Lütfen işlem özelliklerini giriniz:")
 input_data = {}
 
 # V1'den V28'e kadar olan veriler için giriş kutuları
 for i in range(1, 29):
     feature = f"V{i}"
-    input_data[feature] = st.number_input(f"{feature} değerini giriniz:", value=0.0)
+    input_data[feature] = st.number_input(f"{feature} değerini giriniz:", value=0.0, format="%.4f")
 
 # Amount verisi için giriş
-input_data['Amount'] = st.number_input("Amount (Miktar) değerini giriniz:", value=0.0)
+input_data['Amount'] = st.number_input("Amount (Miktar) değerini giriniz:", value=0.0, format="%.2f")
 
 # Veri çerçevesine dönüştür
 input_df = pd.DataFrame([input_data])
 
 # Tahmin yap
 if st.button("Tahmin Yap"):
-    prediction = model.predict(input_df)
-    result = "Dolandırıcılık" if prediction[0] == 1 else "Normal İşlem"
-    st.write(f"Tahmin Sonucu: {result}")
-
-
-# In[ ]:
-
-
-
-
+    try:
+        prediction = model.predict(input_df)
+        result = "Dolandırıcılık" if prediction[0] == 1 else "Normal İşlem"
+        st.success(f"Tahmin Sonucu: {result}")
+    except Exception as e:
+        st.error(f"Tahmin yapılırken bir hata oluştu: {e}")
