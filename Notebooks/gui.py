@@ -6,44 +6,44 @@ import pandas as pd
 import joblib
 import os
 
-# Model dosyasının doğru yolu
+# Correct path to the model file
 model_path = './random_forest_model.pkl'
 
 
-# Modeli yükle
+# Load the model
 try:
     model = joblib.load(model_path)
-    st.success("Model başarıyla yüklendi!")
+    st.success("Model successfully loaded!")
 except FileNotFoundError:
-    st.error("Model dosyası bulunamadı. Lütfen 'random_forest_model.pkl' dosyasının doğru konumda olduğundan emin olun.")
+    st.error("Model file not found. Please make sure the 'random_forest_model.pkl' file is in the correct location.")
     st.stop()
 except Exception as e:
-    st.error(f"Model yüklenirken bir hata oluştu: {e}")
+    st.error(f"An error occurred while loading the model: {e}")
     st.stop()
 
-# Başlık
-st.title("Dolandırıcılık Tespiti Uygulaması")
+# Title
+st.title("Financial Fraud Detection Application")
 
-# Kullanıcıdan giriş verilerini al
-st.subheader("Lütfen işlem özelliklerini giriniz:")
+# Get input data from the user
+st.subheader("Please enter the transaction features:")
 input_data = {}
 
-# V1'den V28'e kadar olan veriler için giriş kutuları
+# Input fields for V1 to V28 data
 for i in range(1, 29):
     feature = f"V{i}"
-    input_data[feature] = st.number_input(f"{feature} değerini giriniz:", value=0.0, format="%.4f")
+    input_data[feature] = st.number_input(f"Enter the value for {feature}:", value=0.0, format="%.4f")
 
-# Amount verisi için giriş
-input_data['Amount'] = st.number_input("Amount (Miktar) değerini giriniz:", value=0.0, format="%.2f")
+# Input for Amount data
+input_data['Amount'] = st.number_input("Enter the Amount value:", value=0.0, format="%.2f")
 
-# Veri çerçevesine dönüştür
+# Convert to DataFrame
 input_df = pd.DataFrame([input_data])
 
-# Tahmin yap
-if st.button("Tahmin Yap"):
+# Make a prediction
+if st.button("Make Prediction"):
     try:
         prediction = model.predict(input_df)
-        result = "Dolandırıcılık" if prediction[0] == 1 else "Normal İşlem"
-        st.success(f"Tahmin Sonucu: {result}")
+        result = "Fraud" if prediction[0] == 1 else "Normal Transaction"
+        st.success(f"Prediction Result: {result}")
     except Exception as e:
-        st.error(f"Tahmin yapılırken bir hata oluştu: {e}")
+        st.error(f"An error occurred while making the prediction: {e}")
