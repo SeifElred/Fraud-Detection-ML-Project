@@ -7,7 +7,7 @@ import joblib
 import os
 
 # Correct path to the model file
-model_path = './random_forest_model.pkl'
+model_path = '/workspaces/Fraud-Detection-ML-Project/Notebooks/random_forest_model.pkl'
 
 
 # Load the model
