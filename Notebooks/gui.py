@@ -7,7 +7,7 @@ import joblib
 import os
 
 # Model dosyasının doğru yolu
-model_path = '/workspaces/Fraud-Detection-ML-Project/notebooks/random_forest_model.pkl'
+model_path = 'random_forest_model.pkl'
 
 # Modeli yükle
 try:
